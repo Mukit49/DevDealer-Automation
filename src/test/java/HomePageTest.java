@@ -1,24 +1,22 @@
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.time.Duration;
 
-
-public class HomePageTest  {
-
+public class HomePageTest {
     WebDriver driver;
     WebDriverWait wait;
+    BrowserStackIntegration browserStackIntegration;
 
-
-    @Test(priority = 1)
-    public void chromeDriverSetup() {
-        driver = new ChromeDriver();
-        driver.get("https://devdealer.fur4.com/");
+    @BeforeClass
+    public void setup() {
+        browserStackIntegration = new BrowserStackIntegration();
+        driver = browserStackIntegration.browserSetup();
         wait = new WebDriverWait(driver, Duration.ofSeconds(50));
     }
 
@@ -28,29 +26,23 @@ public class HomePageTest  {
         return homeElement.isDisplayed();
     }
 
-    public boolean isRegisterPageOpen(){
+    public boolean isRegisterPageOpen() {
         WebElement homePageBtn = driver.findElement(By.xpath("//button[contains(@class, 'group') and contains(@class, 'fixed') and contains(@class, 'right-4')]"));
-
-        WebElement  singUpBtn = driver.findElement(By.xpath("//a[contains(@class, 'block') and contains(@class, 'bg-sky-700') and contains(@class, 'text-sky-200') and @href='/register']"));
+        WebElement signUpBtn = driver.findElement(By.xpath("//a[contains(@class, 'block') and contains(@class, 'bg-sky-700') and contains(@class, 'text-sky-200') and @href='/register']"));
         homePageBtn.click();
-        wait.until(ExpectedConditions.elementToBeClickable(singUpBtn));
-        return singUpBtn.isDisplayed();
+        wait.until(ExpectedConditions.elementToBeClickable(signUpBtn));
+        return signUpBtn.isDisplayed();
     }
 
-    @Test(priority = 2)
+    @Test(priority = 1)
     public void homepageDisplayTest() {
         boolean isVisible = isHomepageVisible();
         assert isVisible : "Homepage is not visible";
     }
 
-    @Test(priority = 3)
-    public void signUpPageTest(){
+    @Test(priority = 2)
+    public void signUpPageTest() {
         boolean isSignUpVisible = isRegisterPageOpen();
-        assert  isSignUpVisible : "Register Page isn't visible";
+        assert isSignUpVisible : "Register Page isn't visible";
     }
-
-
 }
-
-
-
